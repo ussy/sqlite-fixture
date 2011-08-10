@@ -25,6 +25,14 @@ public class ImportException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     /**
+     * @param message
+     *            例外メッセージ
+     */
+    public ImportException(String message) {
+        super(message);
+    }
+
+    /**
      * @param cause
      *            例外原因
      */

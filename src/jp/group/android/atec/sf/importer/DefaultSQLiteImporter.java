@@ -60,6 +60,10 @@ public class DefaultSQLiteImporter implements SQLiteImporter {
      */
     @Override
     public void importData(String dir, final SQLiteDatabase db) {
+    	if (dir == null || dir.equals("")) {
+    		throw new ImportException("dir must not null be or empty");
+    	}
+    	
         Log.i("fixtures", String.format("find files from %s", dir));
         String[] fileNames = ResourceUtils.listFromAsset(context, dir);
         SQLiteMetaLoader metaLoader = new SQLiteMetaLoader(db);
@@ -71,6 +75,8 @@ public class DefaultSQLiteImporter implements SQLiteImporter {
 
                 in = ResourceUtils.openFromAsset(context, path);
                 final String table = removeExtension(fileName);
+                // All deletions are executed before data is registered. 
+                db.delete(table, null, null);
                 ColumnInfo[] columns = metaLoader.load(table);
                 int count = reader.read(in, columns, new Callback() {
                     @Override
